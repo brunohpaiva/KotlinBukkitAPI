@@ -11,23 +11,24 @@ fun <E> Plugin.expirationListOf(): ExpirationList<E> = ExpirationListImpl(this)
 
 fun <E> WithPlugin<*>.expirationListOf() = plugin.expirationListOf<E>()
 
-fun <E> expirationListOf(expireTime: Int, plugin: Plugin, vararg elements: E)
-        = plugin.expirationListOf<E>().apply { elements.forEach { add(it, expireTime) } }
+fun <E> expirationListOf(expireTime: Int, plugin: Plugin, vararg elements: E) =
+    plugin.expirationListOf<E>().apply { elements.forEach { add(it, expireTime) } }
 
-fun <E> Plugin.expirationListOf(expireTime: Int, vararg elements: E)
-        = expirationListOf(expireTime, this, elements = *elements)
+fun <E> Plugin.expirationListOf(expireTime: Int, vararg elements: E) =
+    expirationListOf(expireTime, this, elements = elements)
 
-fun <E> WithPlugin<*>.expirationListOf(expireTime: Int, vararg elements: E)
-        = plugin.expirationListOf(expireTime, *elements)
+fun <E> WithPlugin<*>.expirationListOf(expireTime: Int, vararg elements: E) =
+    plugin.expirationListOf(expireTime, *elements)
 
-fun <E> expirationListOf(expireTime: Int, plugin: Plugin, vararg elements: Pair<E, OnExpireCallback<E>>)
-        = plugin.expirationListOf<E>().apply { elements.forEach { (element, onExpire) -> add(element, expireTime, onExpire) } }
+fun <E> expirationListOf(expireTime: Int, plugin: Plugin, vararg elements: Pair<E, OnExpireCallback<E>>) =
+    plugin.expirationListOf<E>()
+        .apply { elements.forEach { (element, onExpire) -> add(element, expireTime, onExpire) } }
 
-fun <E> Plugin.expirationListOf(expireTime: Int, vararg elements: Pair<E, OnExpireCallback<E>>)
-        = expirationListOf(expireTime, this, elements = *elements)
+fun <E> Plugin.expirationListOf(expireTime: Int, vararg elements: Pair<E, OnExpireCallback<E>>) =
+    expirationListOf(expireTime, this, elements = elements)
 
-fun <E> WithPlugin<*>.expirationListOf(expireTime: Int, vararg elements: Pair<E, OnExpireCallback<E>>)
-        = plugin.expirationListOf(expireTime, *elements)
+fun <E> WithPlugin<*>.expirationListOf(expireTime: Int, vararg elements: Pair<E, OnExpireCallback<E>>) =
+    plugin.expirationListOf(expireTime, *elements)
 
 interface ExpirationList<E> : MutableIterable<E> {
 
@@ -149,8 +150,8 @@ class ExpirationListImpl<E>(private val plugin: Plugin) : ExpirationList<E> {
 
     override fun missingTime(element: E): Int? {
         return getNodeByElement(element)
-                ?.let { it.expireTime - ((System.currentTimeMillis() - it.startTime) / 1000) }
-                ?.toInt()
+            ?.let { it.expireTime - ((System.currentTimeMillis() - it.startTime) / 1000) }
+            ?.toInt()
     }
 
     override operator fun contains(element: E) = indexOf(element) > -1
@@ -194,7 +195,7 @@ class ExpirationListImpl<E>(private val plugin: Plugin) : ExpirationList<E> {
     }
 
     override fun add(element: E, expireTime: Int, onExpire: OnExpireCallback<E>?) {
-        if(expireTime <= 0) throw IllegalArgumentException("expireTime need to be greater then 0")
+        if (expireTime <= 0) throw IllegalArgumentException("expireTime need to be greater then 0")
         val newNode = ExpirationNode(element, expireTime).also { it.onExpire = onExpire }
         if (head == null) {
             head = newNode
@@ -208,7 +209,7 @@ class ExpirationListImpl<E>(private val plugin: Plugin) : ExpirationList<E> {
     }
 
     override fun addFirst(element: E, expireTime: Int, onExpire: OnExpireCallback<E>?) {
-        if(expireTime <= 0) throw IllegalArgumentException("expireTime need to be greater then 0")
+        if (expireTime <= 0) throw IllegalArgumentException("expireTime need to be greater then 0")
         val newNode = ExpirationNode(element, expireTime).also { it.onExpire = onExpire }
         if (head == null) {
             head = newNode
@@ -232,7 +233,7 @@ class ExpirationListImpl<E>(private val plugin: Plugin) : ExpirationList<E> {
     override fun removeFirst(): E? {
         val next = head?.next
         val headElement = head?.element
-        if(next == null) {
+        if (next == null) {
             tail = null
             head = null
         } else {
@@ -245,7 +246,7 @@ class ExpirationListImpl<E>(private val plugin: Plugin) : ExpirationList<E> {
     override fun removeLast(): E? {
         val previous = tail?.previous
         val tailElement = tail?.element
-        if(previous == null) {
+        if (previous == null) {
             tail = null
             head = null
         } else {
@@ -277,8 +278,10 @@ class ExpirationListImpl<E>(private val plugin: Plugin) : ExpirationList<E> {
         return null
     }
 
-    private inline fun getFromSpecificSide(count: Int, start: ExpirationNode<E>?,
-                                           next: (ExpirationNode<E>?) -> ExpirationNode<E>?): ExpirationNode<E> {
+    private inline fun getFromSpecificSide(
+        count: Int, start: ExpirationNode<E>?,
+        next: (ExpirationNode<E>?) -> ExpirationNode<E>?
+    ): ExpirationNode<E> {
         var index = 0
         var current = start
         while (index != count) {
@@ -310,8 +313,8 @@ class ExpirationListImpl<E>(private val plugin: Plugin) : ExpirationList<E> {
         }
     }
 
-    private fun checkTime(current: Long, node: ExpirationNode<E>)
-            = ((current - node.startTime) / 1000) - node.expireTime >= 0
+    private fun checkTime(current: Long, node: ExpirationNode<E>) =
+        ((current - node.startTime) / 1000) - node.expireTime >= 0
 
     private fun generateTask() {
         if (task == null) {

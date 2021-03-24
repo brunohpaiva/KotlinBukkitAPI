@@ -9,7 +9,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Player
 
-val hasHologramAPI by lazy { Bukkit.getServer().pluginManager.getPlugin("HologramAPI") != null  }
+val hasHologramAPI by lazy { Bukkit.getServer().pluginManager.getPlugin("HologramAPI") != null }
 
 val Location.hologramAPI get() = KHologramAPI(this)
 

@@ -4,7 +4,7 @@ import com.connorlinfoot.actionbarapi.ActionBarAPI
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
-val hasActionBarAPI by lazy { Bukkit.getServer().pluginManager.getPlugin("ActionBarAPI") != null  }
+val hasActionBarAPI by lazy { Bukkit.getServer().pluginManager.getPlugin("ActionBarAPI") != null }
 
 val Player.actionBarAPI get() = KActionBarAPI(this)
 

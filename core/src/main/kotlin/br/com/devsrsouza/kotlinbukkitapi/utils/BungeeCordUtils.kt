@@ -8,10 +8,10 @@ import org.bukkit.entity.Player
 typealias ResponseCallback = (message: ByteArray) -> Unit
 
 class BungeeCordRequest(
-        val player: Player,
-        val subChannel: String,
-        val request: ByteArray? = null,
-        val responseCallback: ResponseCallback? = null
+    val player: Player,
+    val subChannel: String,
+    val request: ByteArray? = null,
+    val responseCallback: ResponseCallback? = null
 ) {
     fun send() {
         val out = ByteStreams.newDataOutput()

@@ -1,6 +1,7 @@
 package br.com.devsrsouza.kotlinbukkitapi.collections
 
 typealias ObservableListener = (ObservableAction) -> Unit
+
 enum class ObservableAction { ADD, SET, REPLACE, REMOVE, CLEAR }
 
 fun <T> observableListOf(mutableList: MutableList<T>) = mutableList.asObservable()
@@ -12,7 +13,7 @@ fun <T> MutableSet<T>.asObservable() = ObservableSet(this)
 fun <K, V> MutableMap<K, V>.asObservable() = ObservableMap(this)
 
 class ObservableList<T>(
-        private val list: MutableList<T>
+    private val list: MutableList<T>
 ) : MutableList<T> by list, ObservableCollection<T> {
 
     override val listeners = mutableListOf<ObservableListener>()
@@ -44,15 +45,15 @@ class ObservableList<T>(
 
     override fun listIterator(): MutableListIterator<T> {
         return ObservableMutableListIterator(
-                list.listIterator(),
-                ::runListeners
+            list.listIterator(),
+            ::runListeners
         )
     }
 
     override fun listIterator(index: Int): MutableListIterator<T> {
         return ObservableMutableListIterator(
-                list.listIterator(index),
-                ::runListeners
+            list.listIterator(index),
+            ::runListeners
         )
     }
 
@@ -88,8 +89,8 @@ class ObservableList<T>(
 }
 
 class ObservableMutableListIterator<T>(
-        private val iterator: MutableListIterator<T>,
-        private val runListeners: ObservableListener
+    private val iterator: MutableListIterator<T>,
+    private val runListeners: ObservableListener
 ) : MutableListIterator<T> by iterator {
     override fun add(element: T) {
         iterator.add(element)
@@ -108,7 +109,7 @@ class ObservableMutableListIterator<T>(
 }
 
 class ObservableSet<T>(
-        private val set: MutableSet<T>
+    private val set: MutableSet<T>
 ) : MutableSet<T> by set, ObservableCollection<T> {
 
     override val listeners = mutableListOf<ObservableListener>()
@@ -132,8 +133,8 @@ class ObservableSet<T>(
 
     override fun iterator(): MutableIterator<T> {
         return ObservableMutableIterator(
-                set.iterator(),
-                ::runListeners
+            set.iterator(),
+            ::runListeners
         )
     }
 
@@ -157,8 +158,8 @@ class ObservableSet<T>(
 }
 
 class ObservableMutableIterator<T>(
-        private val iterator: MutableIterator<T>,
-        private val runListeners: ObservableListener
+    private val iterator: MutableIterator<T>,
+    private val runListeners: ObservableListener
 ) : MutableIterator<T> by iterator {
     override fun remove() {
         iterator.remove()
@@ -167,7 +168,7 @@ class ObservableMutableIterator<T>(
 }
 
 class ObservableMap<K, V>(
-        private val map: MutableMap<K, V>
+    private val map: MutableMap<K, V>
 ) : MutableMap<K, V> by map, ObservableHolder {
 
     override val listeners = mutableListOf<ObservableListener>()
@@ -190,7 +191,7 @@ class ObservableMap<K, V>(
 
     override fun putIfAbsent(key: K, value: V): V? {
         return map.putIfAbsent(key, value).also {
-            if(it == null) runListeners(ObservableAction.ADD)
+            if (it == null) runListeners(ObservableAction.ADD)
         }
     }
 

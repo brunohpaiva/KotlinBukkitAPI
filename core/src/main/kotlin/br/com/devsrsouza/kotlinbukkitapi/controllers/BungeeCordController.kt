@@ -12,7 +12,7 @@ import java.nio.charset.Charset
 internal fun provideBungeeCordController() = provideKotlinBukkitAPI().bungeeCordController
 
 internal class BungeeCordController(
-        val plugin: KotlinBukkitAPI
+    val plugin: KotlinBukkitAPI
 ) : PluginMessageListener, KBAPIController {
 
     private val queue = mutableListOf<BungeeCordRequest>()
@@ -28,7 +28,7 @@ internal class BungeeCordController(
         val buffer = ByteBuffer.wrap(message)
         val subChannel = buffer.readUTF()
         val request = queue.firstOrNull { it.subChannel == subChannel }
-        if(request?.responseCallback != null) {
+        if (request?.responseCallback != null) {
             val infoBuffer = buffer.slice()
             val info = ByteArray(infoBuffer.remaining())
             infoBuffer.get(info)
@@ -37,8 +37,7 @@ internal class BungeeCordController(
         }
     }
 
-    fun sendBungeeCord(player: Player, message: ByteArray)
-            = player.sendPluginMessage(plugin, "BungeeCord", message)
+    fun sendBungeeCord(player: Player, message: ByteArray) = player.sendPluginMessage(plugin, "BungeeCord", message)
 
     fun addToQueue(request: BungeeCordRequest) = queue.add(request)
 

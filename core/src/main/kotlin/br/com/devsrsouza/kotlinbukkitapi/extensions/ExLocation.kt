@@ -25,7 +25,8 @@ infix fun Block.eqType(material: Material) = typeId == material.id
 fun Location.dropItem(item: ItemStack) = world.dropItem(this, item)
 fun Location.dropItemNaturally(item: ItemStack) = world.dropItemNaturally(this, item)
 
-fun Location.spawnArrow(direction: Vector, speed: Float, spread: Float) = world.spawnArrow(this, direction, speed, spread)
+fun Location.spawnArrow(direction: Vector, speed: Float, spread: Float) =
+    world.spawnArrow(this, direction, speed, spread)
 
 fun Location.generateTree(type: TreeType) = world.generateTree(this, type)
 fun Location.generateTree(type: TreeType, delegate: BlockChangeDelegate) = world.generateTree(this, type, delegate)

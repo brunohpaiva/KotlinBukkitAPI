@@ -10,9 +10,9 @@ fun MenuDSL.newSlot(item: ItemStack?, builder: SlotDSL.() -> Unit): SlotDSL {
 }
 
 class SlotDSLImpl(
-        override val item: ItemStack?,
-        override var cancel: Boolean,
-        override val eventHandler: SlotEventHandlerDSL = SlotEventHandlerDSL()
+    override val item: ItemStack?,
+    override var cancel: Boolean,
+    override val eventHandler: SlotEventHandlerDSL = SlotEventHandlerDSL()
 ) : SlotDSL {
 
     override val slotData = WeakHashMap<String, Any>()

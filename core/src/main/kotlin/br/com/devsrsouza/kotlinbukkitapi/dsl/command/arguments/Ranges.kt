@@ -14,9 +14,9 @@ val INT_RANGE_FORMAT = "The parameter needs a range of integer.".color(ChatColor
  * Returns [IntRange] or null if was not able to parse to IntRange given the [separator].
  */
 fun Executor<*>.intRangeOrNull(
-        index: Int,
-        argMissing: BaseComponent = MISSING_RANGE_PARAMETER,
-        separator: String = ".."
+    index: Int,
+    argMissing: BaseComponent = MISSING_RANGE_PARAMETER,
+    separator: String = ".."
 ): IntRange? {
     val slices = string(index, argMissing).split(separator)
     val min = slices.getOrNull(0)?.toIntOrNull()
@@ -26,9 +26,9 @@ fun Executor<*>.intRangeOrNull(
 }
 
 fun Executor<*>.intRange(
-        index: Int,
-        argMissing: BaseComponent = MISSING_RANGE_PARAMETER,
-        rangeFormat: BaseComponent = INT_RANGE_FORMAT,
-        separator: String = ".."
+    index: Int,
+    argMissing: BaseComponent = MISSING_RANGE_PARAMETER,
+    rangeFormat: BaseComponent = INT_RANGE_FORMAT,
+    separator: String = ".."
 ): IntRange = intRangeOrNull(index, argMissing, separator)
-        ?: fail(rangeFormat)
+    ?: fail(rangeFormat)

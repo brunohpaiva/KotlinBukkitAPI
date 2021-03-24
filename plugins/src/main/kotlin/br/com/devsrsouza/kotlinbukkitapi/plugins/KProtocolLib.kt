@@ -10,19 +10,23 @@ import org.bukkit.plugin.Plugin
 // packet adapter DSL
 
 inline fun packetAdapter(
-        plugin: Plugin,
-        priority: ListenerPriority = ListenerPriority.NORMAL,
-        block: PacketAdapterDSL.() -> Unit
+    plugin: Plugin,
+    priority: ListenerPriority = ListenerPriority.NORMAL,
+    block: PacketAdapterDSL.() -> Unit
 ) = PacketAdapterDSL(plugin, priority).apply(block).also {
     ProtocolLibrary.getProtocolManager().addPacketListener(it)
 }
 
-class PacketAdapterIO(val type: PacketType? = null, val ignoreCancelled: Boolean = false, val event: PacketAdapterIOEvent)
+class PacketAdapterIO(
+    val type: PacketType? = null,
+    val ignoreCancelled: Boolean = false,
+    val event: PacketAdapterIOEvent
+)
 typealias PacketAdapterIOEvent = PacketEvent.() -> Unit
 
 class PacketAdapterDSL(
-        plugin: Plugin,
-        priority: ListenerPriority = ListenerPriority.NORMAL
+    plugin: Plugin,
+    priority: ListenerPriority = ListenerPriority.NORMAL
 ) : PacketAdapter(plugin, priority) {
 
     val protocol = ProtocolLibrary.getProtocolManager()
@@ -31,17 +35,17 @@ class PacketAdapterDSL(
     val sedingAdapters = mutableListOf<PacketAdapterIO>()
 
     fun receiving(
-            packetType: PacketType? = null,
-            ignoreCancelled: Boolean = false,
-            adapter: PacketAdapterIOEvent
+        packetType: PacketType? = null,
+        ignoreCancelled: Boolean = false,
+        adapter: PacketAdapterIOEvent
     ) {
         recevingAdapters.add(PacketAdapterIO(packetType, ignoreCancelled, adapter))
     }
 
     fun sending(
-            packetType: PacketType? = null,
-            ignoreCancelled: Boolean = false,
-            adapter: PacketAdapterIOEvent
+        packetType: PacketType? = null,
+        ignoreCancelled: Boolean = false,
+        adapter: PacketAdapterIOEvent
     ) {
         sedingAdapters.add(PacketAdapterIO(packetType, ignoreCancelled, adapter))
     }
@@ -50,9 +54,9 @@ class PacketAdapterDSL(
 
     override fun onPacketReceiving(event: PacketEvent) {
         for (adapter in recevingAdapters) {
-            if(adapter.ignoreCancelled && event.isCancelled)
+            if (adapter.ignoreCancelled && event.isCancelled)
                 continue
-            if(adapter.type != null && event.packetType != adapter.type)
+            if (adapter.type != null && event.packetType != adapter.type)
                 continue
 
             adapter.event(event)
@@ -61,9 +65,9 @@ class PacketAdapterDSL(
 
     override fun onPacketSending(event: PacketEvent) {
         for (adapter in sedingAdapters) {
-            if(adapter.ignoreCancelled && event.isCancelled)
+            if (adapter.ignoreCancelled && event.isCancelled)
                 continue
-            if(adapter.type != null && event.packetType != adapter.type)
+            if (adapter.type != null && event.packetType != adapter.type)
                 continue
 
             adapter.event(event)

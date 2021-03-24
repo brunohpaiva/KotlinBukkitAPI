@@ -13,20 +13,20 @@ val TimeFormat.EN: String get() = format(ENFormat)
 
 @Serializable
 data class FormatLang(
-        val second: String,
-        val seconds: String,
-        val minute: String,
-        val minutes: String,
-        val hour: String,
-        val hours: String,
-        val day: String,
-        val days: String,
-        val week: String,
-        val weeks: String,
-        val month: String,
-        val months: String,
-        val year: String,
-        val years: String
+    val second: String,
+    val seconds: String,
+    val minute: String,
+    val minutes: String,
+    val hour: String,
+    val hours: String,
+    val day: String,
+    val days: String,
+    val week: String,
+    val weeks: String,
+    val month: String,
+    val months: String,
+    val year: String,
+    val years: String
 )
 
 /**
@@ -34,9 +34,9 @@ data class FormatLang(
  */
 inline class TimeFormat(private val time: Long) {
     fun format(
-            lang: FormatLang,
-            formatStyle: String = DEFAULT_FORMAT_STYLE,
-            formatSpacer: Char = DEFAULT_SPACER
+        lang: FormatLang,
+        formatStyle: String = DEFAULT_FORMAT_STYLE,
+        formatSpacer: Char = DEFAULT_SPACER
     ): String {
 
         val seconds = time % 60
@@ -47,19 +47,35 @@ inline class TimeFormat(private val time: Long) {
         val months = time / 2419200 % 12
         val years = time / 29030400
 
-        var formated = formatStyle.replace("%SEC", if (seconds > 0) "$seconds ${if (seconds > 1) lang.seconds else lang.second}" else "", true)
+        var formated = formatStyle.replace(
+            "%SEC",
+            if (seconds > 0) "$seconds ${if (seconds > 1) lang.seconds else lang.second}" else "",
+            true
+        )
 
-        formated = formated.replace("%MIN", if (minutes > 0) "$minutes ${if (minutes > 1) lang.minutes else lang.minute}" else "", true)
+        formated = formated.replace(
+            "%MIN",
+            if (minutes > 0) "$minutes ${if (minutes > 1) lang.minutes else lang.minute}" else "",
+            true
+        )
 
-        formated = formated.replace("%HOUR", if (hours > 0) "$hours ${if (hours > 1) lang.hours else lang.hour}" else "", true)
+        formated =
+            formated.replace("%HOUR", if (hours > 0) "$hours ${if (hours > 1) lang.hours else lang.hour}" else "", true)
 
-        formated = formated.replace("%DAY", if (days > 0) "$days ${if (days > 1) lang.days else lang.day}" else "", true)
+        formated =
+            formated.replace("%DAY", if (days > 0) "$days ${if (days > 1) lang.days else lang.day}" else "", true)
 
-        formated = formated.replace("%WEEK", if (weeks > 0) "$weeks ${if (weeks > 1) lang.weeks else lang.week}" else "", true)
+        formated =
+            formated.replace("%WEEK", if (weeks > 0) "$weeks ${if (weeks > 1) lang.weeks else lang.week}" else "", true)
 
-        formated = formated.replace("%MONTH", if (months > 0) "$months ${if (months > 1) lang.months else lang.month}" else "", true)
+        formated = formated.replace(
+            "%MONTH",
+            if (months > 0) "$months ${if (months > 1) lang.months else lang.month}" else "",
+            true
+        )
 
-        formated = formated.replace("%YEAR", if (years > 0) "$years ${if (years > 1) lang.years else lang.year}" else "", true)
+        formated =
+            formated.replace("%YEAR", if (years > 0) "$years ${if (years > 1) lang.years else lang.year}" else "", true)
 
         formated = formated.replace("$formatSpacer$formatSpacer", "$formatSpacer")
 
@@ -68,47 +84,47 @@ inline class TimeFormat(private val time: Long) {
 }
 
 val PTBRFormat = FormatLang(
-        second = "segundo",
-        seconds = "segundos",
+    second = "segundo",
+    seconds = "segundos",
 
-        minute = "minuto",
-        minutes = "minutos",
+    minute = "minuto",
+    minutes = "minutos",
 
-        hour = "hora",
-        hours = "horas",
+    hour = "hora",
+    hours = "horas",
 
-        day = "dia",
-        days = "dias",
+    day = "dia",
+    days = "dias",
 
-        week = "semana",
-        weeks = "semanas",
+    week = "semana",
+    weeks = "semanas",
 
-        month = "mes",
-        months = "meses",
+    month = "mes",
+    months = "meses",
 
-        year = "ano",
-        years = "anos",
+    year = "ano",
+    years = "anos",
 )
 
 val ENFormat = FormatLang(
-        second = "second",
-        seconds = "seconds",
+    second = "second",
+    seconds = "seconds",
 
-        minute = "minute",
-        minutes = "minutes",
+    minute = "minute",
+    minutes = "minutes",
 
-        hour = "hour",
-        hours = "hours",
+    hour = "hour",
+    hours = "hours",
 
-        day = "day",
-        days = "days",
+    day = "day",
+    days = "days",
 
-        week = "week",
-        weeks = "weeks",
+    week = "week",
+    weeks = "weeks",
 
-        month = "month",
-        months = "months",
+    month = "month",
+    months = "months",
 
-        year = "year",
-        years = "years",
+    year = "year",
+    years = "years",
 )

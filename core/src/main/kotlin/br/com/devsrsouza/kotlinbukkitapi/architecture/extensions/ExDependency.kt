@@ -38,15 +38,6 @@ fun <T : Plugin> KotlinPlugin.depend(
     DependencyDelegate(pluginName, type)
 
 
-
-
-
-
-
-
-
-
-
 class DependencyDelegate<T : Plugin>(
     val pluginName: String,
     val type: KClass<T>
@@ -59,7 +50,7 @@ class DependencyDelegate<T : Plugin>(
         thisRef: KotlinPlugin,
         property: KProperty<*>
     ): T {
-        if(cache == null) {
+        if (cache == null) {
             val plugin = thisRef.server.pluginManager.getPlugin(pluginName)
 
             if (plugin != null) {
@@ -87,14 +78,14 @@ class SoftDependencyDelegate<T : Plugin>(
     val type: KClass<T>
 ) : ReadOnlyProperty<KotlinPlugin, T?> {
 
-    private var alreadySearch: Boolean = false
+    private var alreadySearch = false
     private var cache: T? = null
 
     override fun getValue(
         thisRef: KotlinPlugin,
         property: KProperty<*>
     ): T? {
-        if(!alreadySearch) {
+        if (!alreadySearch) {
             val plugin = thisRef.server.pluginManager.getPlugin(pluginName) ?: return null
 
             alreadySearch = true

@@ -42,9 +42,9 @@ class PaginationSlotEventHandler<T> {
 }
 
 class MenuPlayerSlotPageChange(
-        override val menu: Menu<*>,
-        override val slotPos: Int,
-        override val slot: Slot,
-        override val player: Player,
-        override val inventory: Inventory
+    override val menu: Menu<*>,
+    override val slotPos: Int,
+    override val slot: Slot,
+    override val player: Player,
+    override val inventory: Inventory
 ) : MenuPlayerInventorySlot

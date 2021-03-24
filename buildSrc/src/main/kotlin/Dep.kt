@@ -1,7 +1,7 @@
 object Dep {
     val spigot = "org.spigotmc:spigot-api:${Versions.spigotApi}"
     val bstats = "org.bstats:bstats-bukkit:${Versions.bstats}"
-    val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.corouties}"
+    val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}"
     val skedule = "com.okkero.skedule:skedule:${Versions.skedule}"
     val hikariCp = "com.zaxxer:HikariCP:${Versions.hikari}"
     val kaml = "com.charleskorn.kaml:kaml:${Versions.kaml}"
@@ -18,14 +18,14 @@ object Dep {
     }
 
     object Versions {
-        val kotlin = "1.4.10"
-        val serialization = "1.0.0-RC"
-        val exposed = "0.25.1"
-        val hikari = "3.3.1"
+        val kotlin = "1.4.31"
+        val serialization = "1.1.0"
+        val exposed = "0.29.1"
+        val hikari = "4.0.3"
         val bstats = "1.7"
         val spigotApi = "1.8.8-R0.1-SNAPSHOT"
-        val kaml = "0.22.0"
-        val corouties = "1.3.9"
+        val kaml = "0.29.0"
+        val coroutines = "1.4.3"
         val skedule = "1.2.6"
         val shadow = "6.0.0"
 

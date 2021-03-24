@@ -12,27 +12,27 @@ typealias PlayerQuitFunction = PlayerCallbackFunction<Unit>
 typealias PlayerMoveFunction = PlayerCallbackFunction<Boolean>
 
 fun Player.chatInput(
-        plugin: Plugin,
-        sync: Boolean = false,
-        whenQuitWithoutInput: PlayerQuitFunction = {},
-        callback: ChatInputCallBack
+    plugin: Plugin,
+    sync: Boolean = false,
+    whenQuitWithoutInput: PlayerQuitFunction = {},
+    callback: ChatInputCallBack
 ) {
     providePlayerController().inputCallbacks.put(
-            player,
-            ChatInput(plugin, sync, callback, whenQuitWithoutInput)
+        player,
+        ChatInput(plugin, sync, callback, whenQuitWithoutInput)
     ) { it.playerQuit(this) }
 }
 
 // null if player disconnect
 suspend fun Player.chatInput(
-        plugin: Plugin
+    plugin: Plugin
 ): String? = suspendCoroutine { c ->
     chatInput(plugin, true, { c.resume(null) }) { c.resume(it) }
 }
 
 fun Player.whenQuit(
-        plugin: Plugin,
-        callback: PlayerQuitFunction
+    plugin: Plugin,
+    callback: PlayerQuitFunction
 ) {
     providePlayerController().functionsQuit.put(this, PlayerCallback(plugin, callback)) {
         it.callback.invoke(player)
@@ -40,19 +40,20 @@ fun Player.whenQuit(
 }
 
 fun Player.whenMove(
-        plugin: Plugin,
-        callback: PlayerMoveFunction
+    plugin: Plugin,
+    callback: PlayerMoveFunction
 ) {
-    providePlayerController().functionsMove.put(this, PlayerCallback(plugin, callback))
+    providePlayerController().functionsMove[this] = PlayerCallback(plugin, callback)
 }
 
 class ChatInput(
-        val plugin: Plugin,
-        val sync: Boolean,
-        val callback: ChatInputCallBack,
-        val playerQuit: PlayerQuitFunction
+    val plugin: Plugin,
+    val sync: Boolean,
+    val callback: ChatInputCallBack,
+    val playerQuit: PlayerQuitFunction
 )
+
 class PlayerCallback<R>(
-        val plugin: Plugin,
-        val callback: PlayerCallbackFunction<R>
+    val plugin: Plugin,
+    val callback: PlayerCallbackFunction<R>
 )

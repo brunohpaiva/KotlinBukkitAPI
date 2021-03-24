@@ -16,12 +16,13 @@ val permission by lazy { Bukkit.getServer().servicesManager.getRegistration(Perm
 val Player.vault get() = Vault(this)
 val OfflinePlayer.vault get() = VaultOffline(this)
 
-open class VaultOffline(private val player: OfflinePlayer) {
-    val economy = br.com.devsrsouza.kotlinbukkitapi.plugins.vault.Economy(player)
-    val permission = br.com.devsrsouza.kotlinbukkitapi.plugins.vault.Permission(player)
+open class VaultOffline(player: OfflinePlayer) {
+    val economy = Economy(player)
+    val permission = Permission(player)
 }
-class Vault(player: Player) : VaultOffline(player){
-    val chat = br.com.devsrsouza.kotlinbukkitapi.plugins.vault.Chat(player)
+
+class Vault(player: Player) : VaultOffline(player) {
+    val chat = Chat(player)
 }
 
 inline class Economy(private val player: OfflinePlayer) {
@@ -32,14 +33,15 @@ inline class Economy(private val player: OfflinePlayer) {
     fun withdraw(amount: Double) = economy!!.withdrawPlayer(player, amount)
     fun deposit(amount: Double) = economy!!.depositPlayer(player, amount)
 }
+
 inline class Chat(private val player: Player) {
     var prefix: String
         get() = chat!!.getPlayerPrefix(player)
-        set(value) = chat!!.setPlayerPrefix(player, prefix)
+        set(value) = chat!!.setPlayerPrefix(player, value)
 
     var suffix: String
         get() = chat!!.getPlayerSuffix(player)
-        set(value) = chat!!.setPlayerSuffix(player, suffix)
+        set(value) = chat!!.setPlayerSuffix(player, value)
 
     val groups: Array<String> get() = chat!!.getPlayerGroups(player)
     val primaryGroup: String get() = chat!!.getPrimaryGroup(player)

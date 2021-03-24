@@ -30,37 +30,37 @@ import org.bukkit.plugin.Plugin
  * ```
  */
 inline fun <reified T : PlayerEvent> Executor<Player>.commandPlayerEventFlow(
-        priority: EventPriority = EventPriority.NORMAL,
-        ignoreCancelled: Boolean = false,
-        channel: Channel<T> = Channel<T>(Channel.CONFLATED),
-        listener: Listener = SimpleKListener(command.plugin),
+    priority: EventPriority = EventPriority.NORMAL,
+    ignoreCancelled: Boolean = false,
+    channel: Channel<T> = Channel(Channel.CONFLATED),
+    listener: Listener = SimpleKListener(command.plugin),
 ) = playerEventFlow(sender, command.plugin, priority, ignoreCancelled, channel, listener)
 
 /**
  * Creates a event flow for [PlayerEvent] that auto filter for only events from [player].
  */
 inline fun <reified T : PlayerEvent> WithPlugin<*>.playerEventFlow(
-        player: Player,
-        priority: EventPriority = EventPriority.NORMAL,
-        ignoreCancelled: Boolean = false,
-        channel: Channel<T> = Channel<T>(Channel.CONFLATED),
-        listener: Listener = SimpleKListener(plugin),
+    player: Player,
+    priority: EventPriority = EventPriority.NORMAL,
+    ignoreCancelled: Boolean = false,
+    channel: Channel<T> = Channel(Channel.CONFLATED),
+    listener: Listener = SimpleKListener(plugin),
 ) = plugin.playerEventFlow(player, priority, ignoreCancelled, channel, listener)
 
 inline fun <reified T : PlayerEvent> Plugin.playerEventFlow(
-        player: Player,
-        priority: EventPriority = EventPriority.NORMAL,
-        ignoreCancelled: Boolean = false,
-        channel: Channel<T> = Channel<T>(Channel.CONFLATED),
-        listener: Listener = SimpleKListener(this),
+    player: Player,
+    priority: EventPriority = EventPriority.NORMAL,
+    ignoreCancelled: Boolean = false,
+    channel: Channel<T> = Channel(Channel.CONFLATED),
+    listener: Listener = SimpleKListener(this),
 ) = playerEventFlow(player, this, priority, ignoreCancelled, channel, listener)
 
 inline fun <reified T : PlayerEvent> playerEventFlow(
-        player: Player,
-        plugin: Plugin,
-        priority: EventPriority = EventPriority.NORMAL,
-        ignoreCancelled: Boolean = false,
-        channel: Channel<T> = Channel<T>(Channel.CONFLATED),
-        listener: Listener = SimpleKListener(plugin),
-) = eventFlow<T>(T::class, plugin, player, priority, ignoreCancelled, channel, listener)
-        .filter { it.player.name == player.name }
+    player: Player,
+    plugin: Plugin,
+    priority: EventPriority = EventPriority.NORMAL,
+    ignoreCancelled: Boolean = false,
+    channel: Channel<T> = Channel(Channel.CONFLATED),
+    listener: Listener = SimpleKListener(plugin),
+) = eventFlow(T::class, plugin, player, priority, ignoreCancelled, channel, listener)
+    .filter { it.player.name == player.name }

@@ -17,7 +17,8 @@ inline class KPlaceholderAPI(val player: Player) {
     fun setPlaceholders(message: String) = PlaceholderAPI.setPlaceholders(player, message)
     fun setPlaceholders(message: String, pattern: Pattern) = PlaceholderAPI.setPlaceholders(player, message, pattern)
     fun setPlaceholders(messages: List<String>) = PlaceholderAPI.setPlaceholders(player, messages)
-    fun setPlaceholders(messages: List<String>, pattern: Pattern) = PlaceholderAPI.setPlaceholders(player, messages, pattern)
+    fun setPlaceholders(messages: List<String>, pattern: Pattern) =
+        PlaceholderAPI.setPlaceholders(player, messages, pattern)
 
     fun sendMessage(message: String) = player.sendMessage(setPlaceholders(message))
     fun sendMessage(message: List<String>) = setPlaceholders(message).forEach { player.sendMessage(it) }

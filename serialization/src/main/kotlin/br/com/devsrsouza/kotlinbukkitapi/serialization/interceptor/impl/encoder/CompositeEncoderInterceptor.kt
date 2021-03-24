@@ -6,11 +6,11 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.CompositeEncoder
 
 class CompositeEncoderInterceptor(
-        val interceptor: SerializationEncodeInterceptor,
-        val delegate: CompositeEncoder
+    val interceptor: SerializationEncodeInterceptor,
+    val delegate: CompositeEncoder
 ) : CompositeEncoder by delegate {
     override fun encodeBooleanElement(descriptor: SerialDescriptor, index: Int, value: Boolean) {
-         delegate.encodeBooleanElement(descriptor, index, interceptor.encodeBoolean(descriptor, index, value))
+        delegate.encodeBooleanElement(descriptor, index, interceptor.encodeBoolean(descriptor, index, value))
     }
 
     override fun encodeByteElement(descriptor: SerialDescriptor, index: Int, value: Byte) {
@@ -45,8 +45,18 @@ class CompositeEncoderInterceptor(
         delegate.encodeStringElement(descriptor, index, interceptor.encodeString(descriptor, index, value))
     }
 
-    override fun <T> encodeSerializableElement(descriptor: SerialDescriptor, index: Int, serializer: SerializationStrategy<T>, value: T) {
-        delegate.encodeSerializableElement(descriptor, index, SerializationStrategyInterceptor(interceptor, serializer), value)
+    override fun <T> encodeSerializableElement(
+        descriptor: SerialDescriptor,
+        index: Int,
+        serializer: SerializationStrategy<T>,
+        value: T
+    ) {
+        delegate.encodeSerializableElement(
+            descriptor,
+            index,
+            SerializationStrategyInterceptor(interceptor, serializer),
+            value
+        )
     }
 
 }

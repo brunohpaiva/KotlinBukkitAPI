@@ -9,7 +9,8 @@ const val SEND_SUB_COMMANDS_LABEL_PLACEHOLDER = "{label}"
 const val SEND_SUB_COMMANDS_NAME_PLACEHOLDER = "{subcmd}"
 const val SEND_SUB_COMMANDS_DESCRIPTION_PLACEHOLDER = "{description}"
 
-val SEND_SUB_COMMANDS_DEFAULT_FORMAT = "${ChatColor.BLUE}/$SEND_SUB_COMMANDS_LABEL_PLACEHOLDER ${ChatColor.YELLOW}$SEND_SUB_COMMANDS_NAME_PLACEHOLDER ${ChatColor.BLUE}-> ${ChatColor.GRAY}$SEND_SUB_COMMANDS_DESCRIPTION_PLACEHOLDER"
+val SEND_SUB_COMMANDS_DEFAULT_FORMAT =
+    "${ChatColor.BLUE}/$SEND_SUB_COMMANDS_LABEL_PLACEHOLDER ${ChatColor.YELLOW}$SEND_SUB_COMMANDS_NAME_PLACEHOLDER ${ChatColor.BLUE}-> ${ChatColor.GRAY}$SEND_SUB_COMMANDS_DESCRIPTION_PLACEHOLDER"
 
 val Executor<Player>.player: Player get() = sender
 
@@ -24,9 +25,9 @@ fun Executor<*>.sendSubCommandsList(
             .replace(SEND_SUB_COMMANDS_NAME_PLACEHOLDER, it.name, true)
             .replace(SEND_SUB_COMMANDS_DESCRIPTION_PLACEHOLDER, it.description, true)
     }
-    if(subcmds.isEmpty()) fail(command.permissionMessage)
+    if (subcmds.isEmpty()) fail(command.permissionMessage)
 
-    if(sender is Player) {
+    if (sender is Player) {
         subcmds.map { (key, value) ->
             value.suggestCommand("/$label ${key.name}")
         }.forEach { sender.msg(it) }

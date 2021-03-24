@@ -9,11 +9,9 @@ import br.com.devsrsouza.kotlinbukkitapi.serialization.architecture.impl.ConfigD
 import br.com.devsrsouza.kotlinbukkitapi.serialization.architecture.impl.getOrInsertConfigLifecycle
 import br.com.devsrsouza.kotlinbukkitapi.serialization.architecture.impl.registerConfiguration
 import com.charleskorn.kaml.Yaml
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerializationException
-import kotlinx.serialization.StringFormat
-import kotlinx.serialization.serializer
+import kotlinx.serialization.*
 import java.io.File
+import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -36,8 +34,9 @@ import kotlin.reflect.typeOf
  * @param loadOnEnable: If true, loads your configuration just when the server enable,
  * otherwise, load at the call of this function. This could be usage if your configuration
  * uses a parser that Parser a Location or a World that is not loaded yet.
- * @param saveOnDisable: If true, saves the current [SerializationConfig.model] to the configuration file.
+ * @param saveOnDisable: If true, saves the current [SerializationConfig.config] to the configuration file.
  */
+@ExperimentalSerializationApi
 fun <T : Any> KotlinPlugin.config(
         file: String,
         defaultModel: T,
@@ -60,13 +59,14 @@ fun <T : Any> KotlinPlugin.config(
                     someConfigReloaded()
             }
     ).also {
-        registerConfiguration(it as SerializationConfig<Any>, loadOnEnable, saveOnDisable)
+        registerConfiguration(it, loadOnEnable, saveOnDisable)
     }
 }
 
 /**
  * Gets the config for the given [KType]
  */
+@ExperimentalSerializationApi
 fun LifecycleListener<*>.getConfig(type: KType): SerializationConfig<*> {
     try {
         val serialName = serializer(type).descriptor.serialName
@@ -86,11 +86,11 @@ fun LifecycleListener<*>.getConfig(type: KType): SerializationConfig<*> {
  */
 
 fun <T : Any> LifecycleListener<*>.config(type: KType): ConfigDelegate<T, T> {
-    return config(type, { this })
+    return config(type) { this }
 }
 
-@OptIn(ExperimentalStdlibApi::class)
-inline fun <reified T : Any> LifecycleListener<*>.config(): ConfigDelegate<T, T> = config<T>(typeOf<T>())
+@ExperimentalStdlibApi
+inline fun <reified T : Any> LifecycleListener<*>.config(): ConfigDelegate<T, T> = config(typeOf<T>())
 
 fun <T : Any, R> LifecycleListener<*>.config(
         type: KType,
@@ -99,7 +99,7 @@ fun <T : Any, R> LifecycleListener<*>.config(
     return ConfigDelegate(type, deep)
 }
 
-@OptIn(ExperimentalStdlibApi::class)
+@ExperimentalStdlibApi
 inline fun <reified T : Any, R> LifecycleListener<*>.config(
         noinline deep: T.() -> R
 ): ConfigDelegate<T, R> = config(typeOf<T>(), deep)

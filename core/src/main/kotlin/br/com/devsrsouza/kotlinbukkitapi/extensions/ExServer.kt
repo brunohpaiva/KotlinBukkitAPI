@@ -1,7 +1,10 @@
 package br.com.devsrsouza.kotlinbukkitapi.extensions.server
 
 import br.com.devsrsouza.kotlinbukkitapi.extensions.bukkit.server
-import org.bukkit.*
+import org.bukkit.GameMode
+import org.bukkit.OfflinePlayer
+import org.bukkit.World
+import org.bukkit.WorldCreator
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.Recipe
@@ -16,6 +19,11 @@ import java.util.*
 val isPrimaryThread get() = server.isPrimaryThread
 
 fun offlinePlayer(uuid: UUID): OfflinePlayer = server.getOfflinePlayer(uuid)
+
+@Deprecated(
+    message = "Persistent storage of users should be by UUID as names are no longer unique past a single session.",
+    replaceWith = ReplaceWith("offlinePlayer(uuid)", "br.com.devsrsouza.kotlinbukkitapi.extensions.server.offlinePlayer")
+)
 fun offlinePlayer(name: String): OfflinePlayer = server.getOfflinePlayer(name)
 
 fun player(uuid: UUID): Player? = server.getPlayer(uuid)
@@ -57,19 +65,27 @@ val scoreboardManager: ScoreboardManager get() = server.scoreboardManager
 
 var idleTimeout: Int
     get() = server.idleTimeout
-    set(value) { server.idleTimeout = value }
+    set(value) {
+        server.idleTimeout = value
+    }
 
 var defaultGameMode: GameMode
     get() = server.defaultGameMode
-    set(value) { server.defaultGameMode = value }
+    set(value) {
+        server.defaultGameMode = value
+    }
 
 var spawnRadius: Int
     get() = server.spawnRadius
-    set(value) { server.spawnRadius = value }
+    set(value) {
+        server.spawnRadius = value
+    }
 
 var whitelist: Boolean
     get() = server.hasWhitelist()
-    set(value) { server.setWhitelist(value) }
+    set(value) {
+        server.setWhitelist(value)
+    }
 
 fun reloadWhitelist() = server.reloadWhitelist()
 

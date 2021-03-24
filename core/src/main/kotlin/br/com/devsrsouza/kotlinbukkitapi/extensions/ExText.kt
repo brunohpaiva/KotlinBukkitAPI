@@ -5,11 +5,11 @@ import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.HoverEvent
 import net.md_5.bungee.api.chat.TextComponent
 import net.md_5.bungee.chat.ComponentSerializer
-import net.md_5.bungee.api.ChatColor as BungeeColor
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import kotlin.reflect.KProperty
+import net.md_5.bungee.api.ChatColor as BungeeColor
 
 fun CommandSender.msg(message: String) = sendMessage(message)
 fun CommandSender.msg(message: Array<String>) = sendMessage(message)
@@ -28,7 +28,8 @@ fun <K> Map<K, String>.translateColorValues(code: Char = '&') = mapValues { it.v
 fun String.reverseTranslateColor(code: Char = '&') = replace('§', code)
 fun Collection<String>.reverseTranslateColor(code: Char = '&') = map { it.reverseTranslateColor(code) }
 fun <V> Map<String, V>.reverseTranslateColorKeys(code: Char = '&') = mapKeys { it.key.reverseTranslateColor(code) }
-fun <K> Map<K, String>.reverseTranslateColorValues(code: Char = '&') = mapValues { it.value.reverseTranslateColor(code) }
+fun <K> Map<K, String>.reverseTranslateColorValues(code: Char = '&') =
+    mapValues { it.value.reverseTranslateColor(code) }
 
 operator fun String.unaryPlus() = translateColor()
 operator fun String.unaryMinus() = reverseTranslateColor()
@@ -50,8 +51,12 @@ class TranslateChatColorDelegate(val realValue: String, val colorChar: Char = '&
 fun Player.sendMessage(text: BaseComponent) = spigot().sendMessage(text)
 fun Player.sendMessage(text: Array<BaseComponent>) = spigot().sendMessage(TextComponent(*text))
 fun Player.sendMessage(text: List<BaseComponent>) = sendMessage(text.toTypedArray())
-fun CommandSender.sendMessage(text: BaseComponent) = (this as? Player)?.let { it.sendMessage(text) } ?: sendMessage(TextComponent.toLegacyText(text))
-fun CommandSender.sendMessage(text: Array<BaseComponent>) = (this as? Player)?.let { it.sendMessage(text) } ?: sendMessage(TextComponent.toLegacyText(*text))
+fun CommandSender.sendMessage(text: BaseComponent) =
+    (this as? Player)?.sendMessage(text) ?: sendMessage(TextComponent.toLegacyText(text))
+
+fun CommandSender.sendMessage(text: Array<BaseComponent>) =
+    (this as? Player)?.sendMessage(text) ?: sendMessage(TextComponent.toLegacyText(*text))
+
 fun CommandSender.sendMessage(text: List<BaseComponent>) = sendMessage(text.toTypedArray())
 
 fun Player.msg(text: BaseComponent) = sendMessage(text)
@@ -63,6 +68,7 @@ fun CommandSender.msg(text: List<BaseComponent>) = sendMessage(text)
 
 fun String.asText() = TextComponent(*TextComponent.fromLegacyText(this))
 fun List<String>.asText() = TextComponent(*map { it.asText() }.toTypedArray())
+
 //fun String.asText() = TextComponent(this)
 fun BaseComponent.toJson() = ComponentSerializer.toString(this)
 fun Array<BaseComponent>.toJson() = ComponentSerializer.toString(*this)
@@ -106,11 +112,15 @@ fun <T : BaseComponent> T.obfuscated() = apply { isObfuscated = true }
 fun <T : BaseComponent> T.click(clickEvent: ClickEvent) = apply { this.clickEvent = clickEvent }
 fun <T : BaseComponent> T.openUrl(url: String) = click(ClickEvent(ClickEvent.Action.OPEN_URL, url))
 fun <T : BaseComponent> T.runCommand(command: String) = click(ClickEvent(ClickEvent.Action.RUN_COMMAND, command))
-fun <T : BaseComponent> T.suggestCommand(command: String) = click(ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command))
+fun <T : BaseComponent> T.suggestCommand(command: String) =
+    click(ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command))
 
 fun <T : BaseComponent> T.hover(hoverEvent: HoverEvent) = apply { this.hoverEvent = hoverEvent }
-fun <T : BaseComponent> T.showText(component: BaseComponent) = hover(HoverEvent(HoverEvent.Action.SHOW_TEXT, arrayOf(component)))
-fun <T : BaseComponent> T.showText(vararg components: BaseComponent) = hover(HoverEvent(HoverEvent.Action.SHOW_TEXT, components))
+fun <T : BaseComponent> T.showText(component: BaseComponent) =
+    hover(HoverEvent(HoverEvent.Action.SHOW_TEXT, arrayOf(component)))
+
+fun <T : BaseComponent> T.showText(vararg components: BaseComponent) =
+    hover(HoverEvent(HoverEvent.Action.SHOW_TEXT, components))
 
 /**
  * Replaces
@@ -121,9 +131,9 @@ fun <T : BaseComponent> T.showText(vararg components: BaseComponent) = hover(Hov
  * and [BaseComponent.click] text using [String.replace].
  */
 fun <T : BaseComponent> T.replace(
-        oldValue: String,
-        newValue: String,
-        ignoreCase: Boolean = false
+    oldValue: String,
+    newValue: String,
+    ignoreCase: Boolean = false
 ) = apply {
     replaceOnHover(oldValue, newValue, ignoreCase)
     replaceOnClick(oldValue, newValue, ignoreCase)
@@ -136,9 +146,9 @@ fun <T : BaseComponent> T.replace(
  * See [BaseComponent.replace].
  */
 fun <T : BaseComponent> T.replaceAll(
-        oldValue: String,
-        newValue: String,
-        ignoreCase: Boolean = false
+    oldValue: String,
+    newValue: String,
+    ignoreCase: Boolean = false
 ) = apply {
     replaceOnAllHovers(oldValue, newValue, ignoreCase)
     replaceOnAllClick(oldValue, newValue, ignoreCase)
@@ -149,11 +159,11 @@ fun <T : BaseComponent> T.replaceAll(
  * Replace the current [BaseComponent] hover [oldValue] to [newValue] with [String.replace]
  */
 fun <T : BaseComponent> T.replaceOnHover(
-        oldValue: String,
-        newValue: String,
-        ignoreCase: Boolean = false
+    oldValue: String,
+    newValue: String,
+    ignoreCase: Boolean = false
 ) = apply {
-    if(hoverEvent != null)
+    if (hoverEvent != null)
         for (component in hoverEvent.value)
             if (component is TextComponent) component.replaceOnAllTexts(oldValue, newValue, ignoreCase)
 }
@@ -164,34 +174,35 @@ fun <T : BaseComponent> T.replaceOnHover(
  * See [BaseComponent.replaceOnHover]
  */
 fun <T : BaseComponent> T.replaceOnAllHovers(
-        oldValue: String,
-        newValue: String,
-        ignoreCase: Boolean = false
-) : T = apply{
+    oldValue: String,
+    newValue: String,
+    ignoreCase: Boolean = false
+): T = apply {
     replaceOnHover(oldValue, newValue, ignoreCase)
-    if(extra != null)
+    if (extra != null)
         for (component in extra)
             component.replaceOnAllHovers(oldValue, newValue, ignoreCase)
 }
 
 fun <T : BaseComponent> T.replaceOnShowText(
-        oldValue: String,
-        newValue: String,
-        ignoreCase: Boolean = false
+    oldValue: String,
+    newValue: String,
+    ignoreCase: Boolean = false
 ) = apply {
-    if(hoverEvent != null)
-        if(hoverEvent.action == HoverEvent.Action.SHOW_TEXT)
+    if (hoverEvent != null)
+        if (hoverEvent.action == HoverEvent.Action.SHOW_TEXT)
             for (component in hoverEvent.value)
-                if(component is TextComponent)
+                if (component is TextComponent)
                     component.replaceOnAllTexts(oldValue, newValue, ignoreCase)
 }
+
 fun <T : BaseComponent> T.replaceOnAllShowText(
-        oldValue: String,
-        newValue: String,
-        ignoreCase: Boolean = false
-) : T = apply {
+    oldValue: String,
+    newValue: String,
+    ignoreCase: Boolean = false
+): T = apply {
     replaceOnShowText(oldValue, newValue, ignoreCase)
-    if(extra != null)
+    if (extra != null)
         for (component in extra) component.replaceOnAllShowText(oldValue, newValue, ignoreCase)
 }
 
@@ -199,11 +210,11 @@ fun <T : BaseComponent> T.replaceOnAllShowText(
  * Replace the current [BaseComponent] click [oldValue] to [newValue] with [String.replace]
  */
 fun <T : BaseComponent> T.replaceOnClick(
-        oldValue: String,
-        newValue: String,
-        ignoreCase: Boolean = false
+    oldValue: String,
+    newValue: String,
+    ignoreCase: Boolean = false
 ) = apply {
-    if(clickEvent != null)
+    if (clickEvent != null)
         click(ClickEvent(clickEvent.action, clickEvent.value.replace(oldValue, newValue, ignoreCase)))
 }
 
@@ -213,31 +224,32 @@ fun <T : BaseComponent> T.replaceOnClick(
  * See [BaseComponent.replaceOnClick]
  */
 fun <T : BaseComponent> T.replaceOnAllClick(
-        oldValue: String,
-        newValue: String,
-        ignoreCase: Boolean = false
-) : T = apply {
+    oldValue: String,
+    newValue: String,
+    ignoreCase: Boolean = false
+): T = apply {
     replaceOnClick(oldValue, newValue, ignoreCase)
-    if(extra != null)
+    if (extra != null)
         for (component in extra)
             component.replaceOnAllClick(oldValue, newValue, ignoreCase)
 }
 
 fun <T : BaseComponent> T.replaceOnRunCommand(
-        oldValue: String,
-        newValue: String,
-        ignoreCase: Boolean = false
+    oldValue: String,
+    newValue: String,
+    ignoreCase: Boolean = false
 ) = apply {
-    if(clickEvent != null && clickEvent.action == ClickEvent.Action.RUN_COMMAND)
+    if (clickEvent != null && clickEvent.action == ClickEvent.Action.RUN_COMMAND)
         runCommand(clickEvent.value.replace(oldValue, newValue, ignoreCase))
 }
+
 fun <T : BaseComponent> T.replaceOnAllRunCommand(
-        oldValue: String,
-        newValue: String,
-        ignoreCase: Boolean = false
+    oldValue: String,
+    newValue: String,
+    ignoreCase: Boolean = false
 ) = apply {
     replaceOnRunCommand(oldValue, newValue, ignoreCase)
-    if(extra != null)
+    if (extra != null)
         for (component in extra)
             component.replaceOnRunCommand(oldValue, newValue, ignoreCase)
 }
@@ -246,9 +258,9 @@ fun <T : BaseComponent> T.replaceOnAllRunCommand(
  * Replace the [TextComponent.text] with [String.replace]
  */
 fun TextComponent.replaceOnText(
-        oldValue: String,
-        newValue: String,
-        ignoreCase: Boolean = false
+    oldValue: String,
+    newValue: String,
+    ignoreCase: Boolean = false
 ) = apply {
     this.text = text.replace(oldValue, newValue, ignoreCase)
 }
@@ -259,14 +271,14 @@ fun TextComponent.replaceOnText(
  * See [TextComponent.replaceOnText]
  */
 fun TextComponent.replaceOnAllTexts(
-        oldValue: String,
-        newValue: String,
-        ignoreCase: Boolean = false
-) : TextComponent = apply {
+    oldValue: String,
+    newValue: String,
+    ignoreCase: Boolean = false
+): TextComponent = apply {
     replaceOnText(oldValue, newValue, ignoreCase)
-    if(extra != null)
+    if (extra != null)
         for (component in extra)
-            if(component is TextComponent)
+            if (component is TextComponent)
                 component.replaceOnAllTexts(oldValue, newValue, ignoreCase)
 }
 
@@ -274,22 +286,22 @@ fun TextComponent.replaceOnAllTexts(
  * Replace the current [TextComponent.text] [oldValue] to [newValue].
  */
 fun TextComponent.replace(
-        oldValue: String,
-        newValue: TextComponent,
-        ignoreCase: Boolean = false
+    oldValue: String,
+    newValue: TextComponent,
+    ignoreCase: Boolean = false
 ) = split(oldValue, ignoreCase = ignoreCase, limit = 0).joinToText(newValue)
 
 /**
  * Replace the current [TextComponent.text] and all the [TextComponent.extra] [oldValue] to [newValue].
  */
 fun TextComponent.replaceAll(
-        oldValue: String,
-        newValue: TextComponent,
-        ignoreCase: Boolean = false
-) : TextComponent = replace(oldValue, newValue, ignoreCase).apply {
-    if(extra != null)
+    oldValue: String,
+    newValue: TextComponent,
+    ignoreCase: Boolean = false
+): TextComponent = replace(oldValue, newValue, ignoreCase).apply {
+    if (extra != null)
         extra = extra.map {
-            if(it is TextComponent)
+            if (it is TextComponent)
                 it.replaceAll(oldValue, newValue, ignoreCase)
             else it
         }.toMutableList()
@@ -303,9 +315,9 @@ fun TextComponent.replaceAll(
  * @param limit The maximum number of substrings to return.
  */
 fun TextComponent.split(
-        vararg delimiters: String,
-        ignoreCase: Boolean = false,
-        limit: Int = 0
+    vararg delimiters: String,
+    ignoreCase: Boolean = false,
+    limit: Int = 0
 ): List<TextComponent> {
     val copy = duplicate().apply { extra?.clear() }
     val list = text.split(*delimiters, ignoreCase = ignoreCase, limit = limit).map {
@@ -313,8 +325,8 @@ fun TextComponent.split(
             text = it
         }
     }
-    if(list.isNotEmpty()) {
-        duplicate().also { if(it.extra != null) list.last().extra = it.extra }
+    if (list.isNotEmpty()) {
+        duplicate().also { if (it.extra != null) list.last().extra = it.extra }
     }
     return list
 }
@@ -327,22 +339,22 @@ fun TextComponent.split(
  * elements will be appended.
  */
 fun List<TextComponent>.joinToText(
-        separator: TextComponent? = null,
-        prefix: TextComponent? = null,
-        suffix: TextComponent? = null,
-        limit: Int = -1
+    separator: TextComponent? = null,
+    prefix: TextComponent? = null,
+    suffix: TextComponent? = null,
+    limit: Int = -1
 ): TextComponent {
-    if(isEmpty()) return TextComponent("")
+    if (isEmpty()) return TextComponent("")
 
-    var component = prefix?.append(get(0)) ?: get(0)
+    val component = prefix?.append(get(0)) ?: get(0)
 
     var count = 0
     for (element in this) {
         if (++count > 1 && separator != null) component.append(separator)
         if (limit < 0 || count <= limit) {
-            if(count > 1) component.append(element)
+            if (count > 1) component.append(element)
         } else break
     }
-    if(suffix != null) component.append(suffix)
+    if (suffix != null) component.append(suffix)
     return component
 }

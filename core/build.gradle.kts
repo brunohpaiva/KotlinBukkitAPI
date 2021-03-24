@@ -16,3 +16,15 @@ dependencies {
 
     testImplementation("org.mockito:mockito-core:2.24.0")
 }
+
+tasks.compileKotlin {
+    kotlinOptions {
+        freeCompilerArgs = listOf("-Xinline-classes")
+    }
+}
+
+tasks.compileKotlin {
+    kotlinOptions {
+        freeCompilerArgs = listOf("-Xinline-classes")
+    }
+}

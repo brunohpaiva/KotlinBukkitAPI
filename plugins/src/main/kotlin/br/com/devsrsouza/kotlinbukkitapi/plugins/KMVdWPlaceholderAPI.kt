@@ -1,8 +1,8 @@
 package br.com.devsrsouza.kotlinbukkitapi.plugins.dvdwplaceholderapi
 
-import be.maximvdw.placeholderapi.PlaceholderAPI as MVdWPlaceholderAPI
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
+import be.maximvdw.placeholderapi.PlaceholderAPI as MVdWPlaceholderAPI
 
 val hasMVdWPlaceholderAPI by lazy { MVdWPlaceholder != null }
 

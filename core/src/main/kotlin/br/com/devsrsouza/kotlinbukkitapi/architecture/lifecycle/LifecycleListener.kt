@@ -9,7 +9,7 @@ import br.com.devsrsouza.kotlinbukkitapi.extensions.plugin.WithPlugin
 interface LifecycleListener<T : KotlinPlugin> : PluginLifecycleListener, WithPlugin<T> {
 
     override fun invoke(event: LifecycleEvent) {
-        when(event) {
+        when (event) {
             LifecycleEvent.LOAD -> onPluginLoad()
             LifecycleEvent.ENABLE -> onPluginEnable()
             LifecycleEvent.DISABLE -> onPluginDisable()

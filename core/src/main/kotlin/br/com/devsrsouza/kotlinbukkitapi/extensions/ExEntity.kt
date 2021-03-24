@@ -24,5 +24,6 @@ inline fun Firework.meta(block: FireworkMeta.() -> Unit) = apply {
     fireworkMeta = fireworkMeta.apply(block)
 }
 
-inline fun <reified T : Projectile> ProjectileSource.launchProjectile() = launchProjectile(T::class.java)
-inline fun <reified T : Projectile> ProjectileSource.launchProjectile(vector: Vector) = launchProjectile(T::class.java, vector)
+inline fun <reified T : Projectile> ProjectileSource.launchProjectile(): T = launchProjectile(T::class.java)
+inline fun <reified T : Projectile> ProjectileSource.launchProjectile(vector: Vector): T =
+    launchProjectile(T::class.java, vector)

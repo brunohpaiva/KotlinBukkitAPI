@@ -9,10 +9,10 @@ fun String.javaUnicodeToCharacter(): String = unicodeRegex.replace(this) {
 fun <T> T.print(): T = also { println(it) }
 
 fun String.centralize(
-        length: Int,
-        spacer: String = " ",
-        prefix: String = "",
-        suffix: String = ""
+    length: Int,
+    spacer: String = " ",
+    prefix: String = "",
+    suffix: String = ""
 ): String {
     if (this.length >= length) return this
     val part = prefix + spacer.repeat((length - this.length) / 2) + suffix
@@ -25,8 +25,8 @@ val FALSE_CASES = arrayOf("false")
     get() = field.clone()
 
 fun String.toBooleanOrNull(
-        trueCases: Array<String> = TRUE_CASES,
-        falseCases: Array<String> = FALSE_CASES
+    trueCases: Array<String> = TRUE_CASES,
+    falseCases: Array<String> = FALSE_CASES
 ): Boolean? = when {
     trueCases.any { it.equals(this, true) } -> true
     falseCases.any { it.equals(this, true) } -> false

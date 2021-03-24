@@ -21,7 +21,7 @@ interface MenuPlayerSlot : MenuPlayer {
         }[key] = value
     }
 
-    fun getPlayerSlotData(key: String): Any? = slot.playerSlotData.get(player)?.get(key)
+    fun getPlayerSlotData(key: String): Any? = slot.playerSlotData[player]?.get(key)
 }
 
 interface MenuPlayerInventorySlot : MenuPlayerSlot, MenuPlayerInventory {
@@ -40,42 +40,42 @@ interface MenuPlayerInventorySlot : MenuPlayerSlot, MenuPlayerInventory {
 }
 
 open class MenuPlayerSlotInteract(
-        menu: Menu<*>,
-        override val slotPos: Int,
-        override val slot: Slot,
-        player: Player,
-        inventory: Inventory,
-        canceled: Boolean,
-        val click: ClickType,
-        val action: InventoryAction,
-        val clicked: ItemStack?,
-        val cursor: ItemStack?,
-        val hotbarKey: Int
+    menu: Menu<*>,
+    override val slotPos: Int,
+    override val slot: Slot,
+    player: Player,
+    inventory: Inventory,
+    canceled: Boolean,
+    val click: ClickType,
+    val action: InventoryAction,
+    val clicked: ItemStack?,
+    val cursor: ItemStack?,
+    val hotbarKey: Int
 ) : MenuPlayerInteract(menu, player, inventory, canceled), MenuPlayerInventorySlot
 
 class MenuPlayerSlotMoveTo(
-        override val menu: Menu<*>,
-        override val slotPos: Int,
-        override val slot: Slot,
-        override val player: Player,
-        override val inventory: Inventory,
-        override var canceled: Boolean,
-        override val toMoveSlot: Int,
-        override var toMoveItem: ItemStack?
+    override val menu: Menu<*>,
+    override val slotPos: Int,
+    override val slot: Slot,
+    override val player: Player,
+    override val inventory: Inventory,
+    override var canceled: Boolean,
+    override val toMoveSlot: Int,
+    override var toMoveItem: ItemStack?
 ) : MenuPlayerInventorySlot, MenuPlayerMove
 
 class MenuPlayerSlotRender(
-        override val menu: Menu<*>,
-        override val slotPos: Int,
-        override val slot: Slot,
-        override val player: Player,
-        override val inventory: Inventory
+    override val menu: Menu<*>,
+    override val slotPos: Int,
+    override val slot: Slot,
+    override val player: Player,
+    override val inventory: Inventory
 ) : MenuPlayerInventorySlot
 
 class MenuPlayerSlotUpdate(
-        override val menu: Menu<*>,
-        override val slotPos: Int,
-        override val slot: Slot,
-        override val player: Player,
-        override val inventory: Inventory
+    override val menu: Menu<*>,
+    override val slotPos: Int,
+    override val slot: Slot,
+    override val player: Player,
+    override val inventory: Inventory
 ) : MenuPlayerInventorySlot

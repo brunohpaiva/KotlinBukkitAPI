@@ -6,9 +6,9 @@ import kotlin.reflect.KClass
 
 val Plugin.provider: Provider get() = Provider(this)
 
-inline fun <reified T : Any> Plugin.provider(): T? = provider(T::class)
+inline fun <reified T : Any> Plugin.provider(): T = provider(T::class)
 
-fun <T : Any> Plugin.provider(kclass: KClass<T>): T? {
+fun <T : Any> Plugin.provider(kclass: KClass<T>): T {
     return provideProviderController().find(this, kclass)
 }
 

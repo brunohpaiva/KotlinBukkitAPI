@@ -23,9 +23,9 @@ private val knownCommandsField: Field by lazy {
 fun Command.register(plugin: Plugin) {
     serverCommands.register(plugin.name, this)
 
-    val cmds = provideCommandController().commands.get(plugin.name) ?: mutableListOf()
+    val cmds = provideCommandController().commands[plugin.name] ?: mutableListOf()
     cmds.add(this)
-    provideCommandController().commands.put(plugin.name, cmds)
+    provideCommandController().commands[plugin.name] = cmds
 }
 
 fun Command.unregister() {

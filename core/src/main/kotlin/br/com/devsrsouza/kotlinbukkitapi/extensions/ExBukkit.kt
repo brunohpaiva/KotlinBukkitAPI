@@ -27,19 +27,19 @@ fun broadcast(message: String) {
 }
 
 inline fun broadcast(
-        players: Iterable<Player> = Bukkit.getOnlinePlayers(),
-        message: Player.() -> String
+    players: Iterable<Player> = Bukkit.getOnlinePlayers(),
+    message: Player.() -> String
 ) {
     for (player in players)
         player.msg(message.invoke(player))
 }
 
 fun Collection<Player>.broadcast(
-        message: Player.() -> String
+    message: Player.() -> String
 ) = broadcast(this, message)
 
 fun Array<Player>.broadcast(
-        message: Player.() -> String
+    message: Player.() -> String
 ) = broadcast(this.toList(), message)
 
 // BaseComponent
@@ -55,8 +55,8 @@ fun broadcast(message: Array<BaseComponent>) {
 }
 
 inline fun broadcastComponent(
-        players: Iterable<Player> = Bukkit.getOnlinePlayers(),
-        message: Player.() -> Array<BaseComponent>
+    players: Iterable<Player> = Bukkit.getOnlinePlayers(),
+    message: Player.() -> Array<BaseComponent>
 ) {
     for (player in players) {
         player.msg(message.invoke(player))

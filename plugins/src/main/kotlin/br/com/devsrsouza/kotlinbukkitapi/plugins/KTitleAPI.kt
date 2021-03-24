@@ -1,4 +1,4 @@
-package br.com.devsrsouza.kotlinbukkitapi.plugins.titleapi
+package br.com.devsrsouza.kotlinbukkitapi.plugins
 
 import com.connorlinfoot.titleapi.TitleAPI
 import org.bukkit.Bukkit
@@ -10,10 +10,12 @@ val Player.titleAPI get() = KTitleAPI(this)
 
 inline class KTitleAPI(val player: Player) {
     fun clearTitle() = TitleAPI.clearTitle(player)
-    fun sendTitle(fadeIn: Long = 20,
-                  stay: Long = 40,
-                  fadeOut: Long = 20,
-                  title: String? = null, subTitle: String? = null) {
+    fun sendTitle(
+        fadeIn: Long = 20,
+        stay: Long = 40,
+        fadeOut: Long = 20,
+        title: String? = null, subTitle: String? = null
+    ) {
         if (title !== null || subTitle !== null)
             TitleAPI.sendTitle(player, fadeIn.toInt(), stay.toInt(), fadeOut.toInt(), title, subTitle)
     }

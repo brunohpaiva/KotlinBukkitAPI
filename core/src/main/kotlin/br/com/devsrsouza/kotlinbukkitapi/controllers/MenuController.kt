@@ -3,16 +3,22 @@ package br.com.devsrsouza.kotlinbukkitapi.controllers
 import br.com.devsrsouza.kotlinbukkitapi.KotlinBukkitAPI
 import br.com.devsrsouza.kotlinbukkitapi.extensions.event.KListener
 import br.com.devsrsouza.kotlinbukkitapi.extensions.server.onlinePlayers
-import br.com.devsrsouza.kotlinbukkitapi.menu.*
+import br.com.devsrsouza.kotlinbukkitapi.menu.getMenuFromInventory
+import br.com.devsrsouza.kotlinbukkitapi.menu.getMenuFromPlayer
 import br.com.devsrsouza.kotlinbukkitapi.menu.slot.MenuPlayerSlotInteract
+import br.com.devsrsouza.kotlinbukkitapi.menu.slotOrBaseSlot
+import br.com.devsrsouza.kotlinbukkitapi.menu.takeIfHasPlayer
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
-import org.bukkit.event.inventory.*
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryDragEvent
+import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.player.PlayerPickupItemEvent
 import org.bukkit.event.server.PluginDisableEvent
 
 internal class MenuController(
-        override val plugin: KotlinBukkitAPI
+    override val plugin: KotlinBukkitAPI
 ) : KListener<KotlinBukkitAPI>, KBAPIController {
 
     override fun onEnable() {
@@ -23,7 +29,7 @@ internal class MenuController(
     fun pluginDisableEvent(event: PluginDisableEvent) {
         onlinePlayers.forEach {
             val menu = getMenuFromPlayer(it)
-                    ?.takeIf { it.plugin.name == event.plugin.name }
+                ?.takeIf { it.plugin.name == event.plugin.name }
             menu?.close(it, true)
         }
     }
@@ -42,11 +48,11 @@ internal class MenuController(
                     val slot = menu.slotOrBaseSlot(clickedSlot)
 
                     val interact = MenuPlayerSlotInteract(
-                            menu, clickedSlot, slot,
-                            player, inv, slot.cancel,
-                            event.click, event.action,
-                            event.currentItem, event.cursor,
-                            event.hotbarButton
+                        menu, clickedSlot, slot,
+                        player, inv, slot.cancel,
+                        event.click, event.action,
+                        event.currentItem, event.cursor,
+                        event.hotbarButton
                     )
 
                     slot.eventHandler.interact(interact)

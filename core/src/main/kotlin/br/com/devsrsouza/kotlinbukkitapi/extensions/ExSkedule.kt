@@ -13,8 +13,8 @@ import org.bukkit.plugin.java.JavaPlugin
 import kotlin.time.Duration
 
 fun WithPlugin<*>.schedule(
-        initialContext: SynchronizationContext = SynchronizationContext.SYNC,
-        co: suspend BukkitSchedulerController.() -> Unit
+    initialContext: SynchronizationContext = SynchronizationContext.SYNC,
+    co: suspend BukkitSchedulerController.() -> Unit
 ) = plugin.schedule(initialContext, co)
 
 val BukkitSchedulerController.contextSync get() = SynchronizationContext.SYNC
@@ -49,12 +49,12 @@ inline class PluginDispatcher(val plugin: JavaPlugin) {
 suspend fun BukkitSchedulerController.takeMaxPerTick(time: Duration) {
     val takeValues = getTakeValuesOrNull(context)
 
-    if(takeValues == null) {
+    if (takeValues == null) {
         // registering take max at current millisecond
         registerCoroutineContextTakes(context, time)
     } else {
         // checking if this exceeded the max time of execution
-        if(takeValues.wasTimeExceeded()) {
+        if (takeValues.wasTimeExceeded()) {
             unregisterCoroutineContextTakes(context)
             waitFor(1)
         }

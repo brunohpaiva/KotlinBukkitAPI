@@ -1,7 +1,7 @@
 package br.com.devsrsouza.kotlinbukkitapi.menu
 
-import br.com.devsrsouza.kotlinbukkitapi.menu.slot.Slot
 import br.com.devsrsouza.kotlinbukkitapi.extensions.plugin.WithPlugin
+import br.com.devsrsouza.kotlinbukkitapi.menu.slot.Slot
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
@@ -37,13 +37,13 @@ interface Menu<T : Slot> : WithPlugin<Plugin>, InventoryHolder {
 
     fun clearData() {
         data.clear()
-        for(slot in slotsWithBaseSlot())
+        for (slot in slotsWithBaseSlot())
             slot.clearSlotData()
     }
 
     fun clearPlayerData(player: Player) {
         playerData.remove(player)
-        for(slot in slotsWithBaseSlot())
+        for (slot in slotsWithBaseSlot())
             slot.clearPlayerData(player)
     }
 

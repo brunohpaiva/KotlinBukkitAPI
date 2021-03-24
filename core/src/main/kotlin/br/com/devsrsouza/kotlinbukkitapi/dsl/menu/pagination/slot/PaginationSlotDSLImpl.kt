@@ -8,14 +8,16 @@ import org.bukkit.entity.Player
 import java.util.*
 
 class PaginationSlotDSLImpl<T>(
-        private val pagination: MenuPaginationImpl<T>,
-        override val slotRoot: SlotDSL
+    private val pagination: MenuPaginationImpl<T>,
+    override val slotRoot: SlotDSL
 ) : PaginationSlotDSL<T> {
     override val paginationEventHandler = PaginationSlotEventHandler<T>()
 
     override var cancel: Boolean
         get() = slotRoot.cancel
-        set(value) { slotRoot.cancel = value }
+        set(value) {
+            slotRoot.cancel = value
+        }
 
     override val slotData: WeakHashMap<String, Any>
         get() = slotRoot.slotData
@@ -23,25 +25,25 @@ class PaginationSlotDSLImpl<T>(
         get() = slotRoot.playerSlotData
 
     internal fun updateSlot(
-            actualItem: T?,
-            nextItem: T?,
-            slotPos: Int,
-            menuPlayerInventory: MenuPlayerInventory,
-            isPageChange: Boolean = false
+        actualItem: T?,
+        nextItem: T?,
+        slotPos: Int,
+        menuPlayerInventory: MenuPlayerInventory,
+        isPageChange: Boolean = false
     ) {
-        if(isPageChange) {
+        if (isPageChange) {
             relocateSlotData(actualItem, nextItem)
 
             // triggering event
             paginationEventHandler.handlePageChange(
-                    actualItem,
-                    MenuPlayerSlotPageChange(
-                            pagination.menu,
-                            slotPos,
-                            slotRoot,
-                            menuPlayerInventory.player,
-                            menuPlayerInventory.inventory
-                    )
+                actualItem,
+                MenuPlayerSlotPageChange(
+                    pagination.menu,
+                    slotPos,
+                    slotRoot,
+                    menuPlayerInventory.player,
+                    menuPlayerInventory.inventory
+                )
             )
         }
 
@@ -49,27 +51,27 @@ class PaginationSlotDSLImpl<T>(
         menuPlayerInventory.setItem(slotPos, null)
 
         paginationEventHandler.handleRender(
-                nextItem,
-                MenuPlayerSlotRender(
-                        pagination.menu,
-                        slotPos,
-                        slotRoot,
-                        menuPlayerInventory.player,
-                        menuPlayerInventory.inventory
-                )
+            nextItem,
+            MenuPlayerSlotRender(
+                pagination.menu,
+                slotPos,
+                slotRoot,
+                menuPlayerInventory.player,
+                menuPlayerInventory.inventory
+            )
         )
     }
 
     internal fun relocateSlotData(actualItem: T?, nextItem: T?) {
-        if(actualItem != null) {
+        if (actualItem != null) {
             // caching the current Data from Slot
             val slotData = WeakHashMap(slotData)
             val playerSlotData = WeakHashMap(playerSlotData)
 
-            if(slotData.isNotEmpty())
+            if (slotData.isNotEmpty())
                 pagination.itemSlotData[actualItem] = slotData
 
-            if(playerSlotData.isNotEmpty())
+            if (playerSlotData.isNotEmpty())
                 pagination.itemPlayerSlotData[actualItem] = playerSlotData
         }
 
@@ -77,13 +79,13 @@ class PaginationSlotDSLImpl<T>(
         slotData.clear()
         playerSlotData.clear()
 
-        if(nextItem != null) {
+        if (nextItem != null) {
             val nextSlotData = pagination.itemSlotData[nextItem]
             val nextPlayerSlotData = pagination.itemPlayerSlotData[nextItem]
 
-            if(nextSlotData != null)
+            if (nextSlotData != null)
                 slotData.putAll(nextSlotData)
-            if(nextPlayerSlotData != null)
+            if (nextPlayerSlotData != null)
                 playerSlotData.putAll(nextPlayerSlotData)
         }
     }

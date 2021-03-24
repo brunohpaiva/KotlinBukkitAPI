@@ -17,7 +17,7 @@ fun Menu<*>.viewersFromPlayers(players: Set<Player>) = viewers.filterKeys { it i
 fun Menu<*>.slotsWithBaseSlot() = slots.values + baseSlot
 
 fun Menu<*>.hasPlayer(player: Player) = viewers.containsKey(player)
-fun Menu<*>.takeIfHasPlayer(player: Player): Menu<*>? = if(hasPlayer(player)) this else null
+fun Menu<*>.takeIfHasPlayer(player: Player): Menu<*>? = if (hasPlayer(player)) this else null
 
 fun inventoryIsMenu(inventory: Inventory) = inventory.holder is Menu<*>
 

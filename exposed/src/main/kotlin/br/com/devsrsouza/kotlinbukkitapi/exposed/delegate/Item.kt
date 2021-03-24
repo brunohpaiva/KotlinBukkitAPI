@@ -8,7 +8,6 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.statements.api.ExposedBlob
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.sql.Blob
 import kotlin.reflect.KProperty
 
 /**
@@ -19,20 +18,20 @@ fun Entity<*>.itemStack(column: Column<ExposedBlob>) = ItemStackExposedDelegate(
 fun Entity<*>.nullableItemStack(column: Column<ExposedBlob?>) = ItemStackExposedDelegateNullable(column)
 
 class ItemStackExposedDelegate(
-        val column: Column<ExposedBlob>
+    val column: Column<ExposedBlob>
 ) : ExposedDelegate<ItemStack> {
     override operator fun <ID : Comparable<ID>> getValue(
-            entity: Entity<ID>,
-            desc: KProperty<*>
+        entity: Entity<ID>,
+        desc: KProperty<*>
     ): ItemStack {
         val blob = entity.run { column.getValue(this, desc) }
         return toItemStack(blob.bytes)
     }
 
     override operator fun <ID : Comparable<ID>> setValue(
-            entity: Entity<ID>,
-            desc: KProperty<*>,
-            value: ItemStack
+        entity: Entity<ID>,
+        desc: KProperty<*>,
+        value: ItemStack
     ) {
         val byteArray = toByteArray(value)
         val blob = ExposedBlob(byteArray)
@@ -41,20 +40,20 @@ class ItemStackExposedDelegate(
 }
 
 class ItemStackExposedDelegateNullable(
-        val column: Column<ExposedBlob?>
+    val column: Column<ExposedBlob?>
 ) : ExposedDelegate<ItemStack?> {
     override operator fun <ID : Comparable<ID>> getValue(
-            entity: Entity<ID>,
-            desc: KProperty<*>
+        entity: Entity<ID>,
+        desc: KProperty<*>
     ): ItemStack? {
         val blob = entity.run { column.getValue(this, desc) }
         return blob?.bytes?.let { toItemStack(it) }
     }
 
     override operator fun <ID : Comparable<ID>> setValue(
-            entity: Entity<ID>,
-            desc: KProperty<*>,
-            value: ItemStack?
+        entity: Entity<ID>,
+        desc: KProperty<*>,
+        value: ItemStack?
     ) {
         val byteArray = value?.let { toByteArray(it) }
         val blob = byteArray?.let { ExposedBlob(it) }

@@ -8,6 +8,7 @@ import br.com.devsrsouza.kotlinbukkitapi.architecture.lifecycle.getOrInsertGener
 import br.com.devsrsouza.kotlinbukkitapi.extensions.plugin.WithPlugin
 import br.com.devsrsouza.kotlinbukkitapi.serialization.SerializationConfig
 import br.com.devsrsouza.kotlinbukkitapi.serialization.architecture.getConfig
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -20,16 +21,16 @@ internal fun KotlinPlugin.getOrInsertConfigLifecycle(): ConfigLifecycle {
 }
 
 internal class ConfigLifecycle(
-        override val plugin: KotlinPlugin
+    override val plugin: KotlinPlugin
 ) : PluginLifecycleListener, WithPlugin<KotlinPlugin> {
     // String = Descriptor name
-    internal val serializationConfigurations = hashMapOf<String, SerializationConfig<Any>>()
+    internal val serializationConfigurations = hashMapOf<String, SerializationConfig<*>>()
 
     internal val onEnableLoadSerializationConfigurations = mutableListOf<SerializationConfig<*>>()
     internal val onDisableSaveSerializationConfigurations = mutableListOf<SerializationConfig<*>>()
 
     override fun invoke(event: LifecycleEvent) {
-        when(event) {
+        when (event) {
             LifecycleEvent.ENABLE -> onPluginEnable()
             LifecycleEvent.DISABLE -> onPluginDisable()
             LifecycleEvent.ALL_CONFIG_RELOAD -> onConfigReload()
@@ -52,39 +53,40 @@ internal class ConfigLifecycle(
     }
 }
 
-internal fun KotlinPlugin.registerConfiguration(
-        config: SerializationConfig<Any>,
-        loadOnEnable: Boolean,
-        saveOnDisable: Boolean
+@ExperimentalSerializationApi
+internal fun <T : Any> KotlinPlugin.registerConfiguration(
+    config: SerializationConfig<T>,
+    loadOnEnable: Boolean,
+    saveOnDisable: Boolean
 ) {
     val lifecycle = getOrInsertConfigLifecycle()
 
-    lifecycle.serializationConfigurations.put(config.serializer.descriptor.serialName, config)
+    lifecycle.serializationConfigurations[config.serializer.descriptor.serialName] = config
 
-    if(loadOnEnable) {
+    if (loadOnEnable) {
         val configLifecycle = getOrInsertConfigLifecycle()
         configLifecycle.onEnableLoadSerializationConfigurations.add(config)
     } else {
         config.load()
     }
 
-    if(saveOnDisable) {
+    if (saveOnDisable) {
         val configLifecycle = getOrInsertConfigLifecycle()
         configLifecycle.onDisableSaveSerializationConfigurations.add(config)
     }
 }
 
 class ConfigDelegate<T, R>(
-        val type: KType,
-        val deep: T.() -> R
+    val type: KType,
+    val deep: T.() -> R
 ) : ReadOnlyProperty<LifecycleListener<*>, R> {
     private var configCache: SerializationConfig<*>? = null
 
     override fun getValue(
-            thisRef: LifecycleListener<*>,
-            property: KProperty<*>
+        thisRef: LifecycleListener<*>,
+        property: KProperty<*>
     ): R {
-        if(configCache == null) {
+        if (configCache == null) {
             val config = thisRef.getConfig(type)
 
             configCache = config

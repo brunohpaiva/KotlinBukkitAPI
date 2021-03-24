@@ -1,6 +1,9 @@
 package br.com.devsrsouza.kotlinbukkitapi.architecture
 
-import br.com.devsrsouza.kotlinbukkitapi.architecture.lifecycle.*
+import br.com.devsrsouza.kotlinbukkitapi.architecture.lifecycle.Lifecycle
+import br.com.devsrsouza.kotlinbukkitapi.architecture.lifecycle.LifecycleEvent
+import br.com.devsrsouza.kotlinbukkitapi.architecture.lifecycle.LifecycleListener
+import br.com.devsrsouza.kotlinbukkitapi.architecture.lifecycle.PluginLifecycleListener
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.concurrent.ConcurrentHashMap
 
@@ -17,10 +20,10 @@ open class KotlinPlugin : JavaPlugin() {
      * **Priority Order**: High priority loads first and disable lastly
      */
     inline fun <P : KotlinPlugin, T : LifecycleListener<P>> lifecycle(
-            priority: Int = 1,
-            block: () -> T
+        priority: Int = 1,
+        block: () -> T
     ): T = block().also {
-        registerKotlinPluginLifecycle(priority, it as LifecycleListener<KotlinPlugin>)
+        registerKotlinPluginLifecycle(priority, it as LifecycleListener<P>)
     }
 
     /**
@@ -29,16 +32,13 @@ open class KotlinPlugin : JavaPlugin() {
      * **Priority Order**: High priority loads first and disable lastly
      */
     fun registerKotlinPluginLifecycle(
-            priority: Int = 1,
-            listener: PluginLifecycleListener
+        priority: Int = 1,
+        listener: PluginLifecycleListener
     ) {
-        _lifecycleListeners.put(
-                Lifecycle(
-                        priority,
-                        listener
-                ),
-                true
-        )
+        _lifecycleListeners[Lifecycle(
+            priority,
+            listener
+        )] = true
     }
 
     // implementation stuff, ignore...
@@ -52,14 +52,14 @@ open class KotlinPlugin : JavaPlugin() {
     final override fun onLoad() {
         onPluginLoad()
 
-        for(lifecycle in lifecycleLoadOrder())
+        for (lifecycle in lifecycleLoadOrder())
             lifecycle.listener(LifecycleEvent.LOAD)
     }
 
     final override fun onEnable() {
         onPluginEnable()
 
-        for(lifecycle in lifecycleLoadOrder())
+        for (lifecycle in lifecycleLoadOrder())
             lifecycle.listener(LifecycleEvent.ENABLE)
     }
 
@@ -69,7 +69,7 @@ open class KotlinPlugin : JavaPlugin() {
         // reversing lifecycles for execute first the low priority ones
         val reversedLifecyle = lifecycleDisableOrder()
 
-        for(lifecycle in reversedLifecyle)
+        for (lifecycle in reversedLifecyle)
             lifecycle.listener(LifecycleEvent.DISABLE)
     }
 
@@ -82,11 +82,11 @@ open class KotlinPlugin : JavaPlugin() {
     fun someConfigReloaded(all: Boolean = false) {
         onConfigReload()
 
-        for(lifecycle in lifecycleListeners)
+        for (lifecycle in lifecycleListeners)
             lifecycle.listener(
-                    if(all)
-                        LifecycleEvent.ALL_CONFIG_RELOAD
-                                else LifecycleEvent.CONFIG_RELOAD
+                if (all)
+                    LifecycleEvent.ALL_CONFIG_RELOAD
+                else LifecycleEvent.CONFIG_RELOAD
             )
     }
 

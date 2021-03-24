@@ -11,7 +11,7 @@ import org.bukkit.event.server.PluginDisableEvent
 internal fun provideCommandController() = provideKotlinBukkitAPI().commandController
 
 internal class CommandController(
-        override val plugin: KotlinBukkitAPI
+    override val plugin: KotlinBukkitAPI
 ) : KListener<KotlinBukkitAPI>, KBAPIController {
 
     val commands = hashMapOf<String, MutableList<Command>>()
